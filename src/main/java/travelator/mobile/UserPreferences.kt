@@ -2,8 +2,8 @@ package travelator.mobile
 
 import java.util.*
 
-class UserPreferences @JvmOverloads constructor(
-    var greeting: String = "Hello",
-    var locale: Locale = Locale.UK,
-    var currency: Currency = Currency.getInstance(Locale.UK)
+data class UserPreferences(
+    val greeting: String,
+    val locale: Locale,
+    val currency: Currency
 )

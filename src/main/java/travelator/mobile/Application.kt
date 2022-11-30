@@ -6,6 +6,6 @@ class Application(private var preferences: UserPreferences) {
     }
 
     fun editPreferences() {
-        preferences = PreferencesView(preferences).showModal()
+        preferences = PreferencesView().showModal(preferences)
     }
 }
