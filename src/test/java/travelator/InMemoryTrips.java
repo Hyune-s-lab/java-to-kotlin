@@ -33,7 +33,7 @@ public class InMemoryTrips implements Trips {
     }
 
     @Override
-    public Set<Trip> currentTripsFor(String customerId) {
+    public Set<Trip> currentTripsFor(String customerId, Instant at) {
         Instant now = clock.instant();
         return tripsFor(customerId).stream()
             .filter(trip -> trip.isPlannedToBeActiveAt(now))

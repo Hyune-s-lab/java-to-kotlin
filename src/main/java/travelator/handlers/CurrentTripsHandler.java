@@ -22,7 +22,7 @@ public class CurrentTripsHandler {
                 .findFirst();
             if (customerId.isEmpty())
                 return new Response(HTTP_BAD_REQUEST);
-            var currentTrip = tracking.currentTripFor(customerId.get());
+            var currentTrip = tracking.currentTripFor(customerId.get(), null);
             return currentTrip.isPresent() ?
                 new Response(HTTP_OK,
                     objectMapper.writeValueAsString(currentTrip)) :
