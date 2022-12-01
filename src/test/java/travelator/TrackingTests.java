@@ -1,7 +1,6 @@
 package travelator;
 
 import org.junit.jupiter.api.Test;
-import travelator.testing.StoppedClock;
 
 import java.time.Instant;
 import java.util.Optional;
@@ -12,72 +11,71 @@ import static travelator.Trip.BookingStatus.BOOKED;
 import static travelator.Trip.BookingStatus.NOT_BOOKED;
 import static travelator.testing.TimeUtils.zonedDateTime;
 
-class TrackingTests {
+public class TrackingTests {
 
-    final StoppedClock clock = new StoppedClock();
-
-    final InMemoryTrips trips = new InMemoryTrips(clock);
+    final InMemoryTrips trips = new InMemoryTrips();
     final Tracking tracking = new Tracking(trips);
 
     @Test
-    void returns_empty_when_no_trip_planned_to_happen_now() {
-        clock.now = anInstant();
+    public void returns_empty_when_no_trip_planned_to_happen_now() {
         assertEquals(
             Optional.empty(),
-            tracking.currentTripFor("aCustomer", null)
+            tracking.currentTripFor("cust1", anInstant())
         );
     }
 
     @Test
-    void returns_single_active_booked_trip() {
+    public void returns_single_active_booked_trip() {
         var diwaliTrip = givenATrip("cust1", "Diwali",
             "2020-11-13", "2020-11-15", BOOKED);
         givenATrip("cust1", "Christmas",
             "2020-12-24", "2020-11-26", BOOKED);
 
-        clock.now = diwaliTrip.getPlannedStartTime().toInstant();
         assertEquals(
             Optional.of(diwaliTrip),
-            tracking.currentTripFor("cust1", null)
+            tracking.currentTripFor("cust1",
+                diwaliTrip.getPlannedStartTime().toInstant())
         );
     }
 
     @Test
-    void returns_only_customers_trip() {
+    public void returns_only_customers_trip() {
         var diwaliTrip = givenATrip("cust1", "Diwali",
             "2020-11-13", "2020-11-15", BOOKED);
         givenATrip("aDifferentCustomer", "Diwali",
             "2020-11-13", "2020-11-15", BOOKED);
 
-        clock.now = diwaliTrip.getPlannedStartTime().toInstant();
-        assertEquals(Optional.of(diwaliTrip),
-            tracking.currentTripFor("cust1", null)
+        assertEquals(
+            Optional.of(diwaliTrip),
+            tracking.currentTripFor("cust1",
+                diwaliTrip.getPlannedStartTime().toInstant())
         );
     }
 
     @Test
-    void returns_single_booked_trip() {
+    public void returns_single_booked_trip() {
         var diwaliTrip = givenATrip("cust1", "Diwali",
             "2020-11-13", "2020-11-15", BOOKED);
         givenATrip("cust1", "Diwali",
             "2020-11-13", "2020-11-15", NOT_BOOKED);
 
-        clock.now = diwaliTrip.getPlannedStartTime().toInstant();
-        assertEquals(Optional.of(diwaliTrip),
-            tracking.currentTripFor("cust1", null)
+        assertEquals(
+            Optional.of(diwaliTrip),
+            tracking.currentTripFor("cust1",
+                diwaliTrip.getPlannedStartTime().toInstant())
         );
     }
 
     @Test
-    void throws_when_more_than_one_simultaneous_booked_trip() {
+    public void throws_when_more_than_one_simultaneous_booked_trip() {
         var diwaliTrip = givenATrip("cust1", "Diwali", "" +
             "2020-11-13", "2020-11-15", BOOKED);
         givenATrip("cust1", "Diwali",
             "2020-11-13", "2020-11-15", BOOKED);
 
-        clock.now = diwaliTrip.getPlannedStartTime().toInstant();
         assertThrows(IllegalStateException.class,
-            () -> tracking.currentTripFor("cust1", null)
+            () -> tracking.currentTripFor("cust1",
+                diwaliTrip.getPlannedStartTime().toInstant())
         );
     }
 

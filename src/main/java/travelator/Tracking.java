@@ -16,7 +16,7 @@ class Tracking implements ITrackTrips {
 
     @Override
     public Optional<Trip> currentTripFor(String customerId, Instant at) {
-        var candidates = trips.currentTripsFor(customerId, null).stream()
+        var candidates = trips.currentTripsFor(customerId, at).stream()
             .filter((trip) -> trip.getBookingStatus() == BOOKED)
             .collect(toList());
         if (candidates.size() == 1)
