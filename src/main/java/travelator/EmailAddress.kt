@@ -5,14 +5,15 @@ data class EmailAddress(
     val domain: String
 ) {
 
-    override fun toString(): String { // <1>
-        return "$localPart@$domain"
-    }
+    override fun toString(): String = "$localPart@$domain"
 
     companion object {
         @JvmStatic
         fun parse(value: String): EmailAddress {
-            val atIndex = value.lastIndexOf('@')
+            return emailAddress(value, value.lastIndexOf('@'))
+        }
+
+        private fun emailAddress(value: String, atIndex: Int): EmailAddress {
             require(!(atIndex < 1 || atIndex == value.length - 1)) {
                 "EmailAddress must be two parts separated by @"
             }
