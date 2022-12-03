@@ -28,7 +28,7 @@ object HighValueCustomersReport {
         val total = valuableCustomers.stream()
             .mapToDouble { (_, _, _, _, spend): CustomerData -> spend }
             .sum()
-        return "\tTOTAL\t" + formatMoney(total)
+        return "\tTOTAL\t" + total.toMoneyString()
     }
 
     @JvmStatic
@@ -44,15 +44,11 @@ object HighValueCustomersReport {
     }
 
     private fun lineFor(customer: CustomerData): String {
-        return customer.id + "\t" + marketingNameFor(customer) + "\t" +
-                formatMoney(customer.spend)
+        return "${customer.id}\t${customer.marketingName}\t${customer.spend.toMoneyString()}"
     }
 
-    private fun formatMoney(money: Double): String {
-        return String.format("%#.2f", money)
-    }
+    private fun Double.toMoneyString(): String = String.format("%#.2f", this)
 
-    private fun marketingNameFor(customer: CustomerData): String {
-        return customer.familyName.uppercase(Locale.getDefault()) + ", " + customer.givenName
-    }
+    private val CustomerData.marketingName: String
+        get() = "${familyName.uppercase(Locale.getDefault())}, $givenName"
 }
