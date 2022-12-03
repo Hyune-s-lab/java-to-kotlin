@@ -32,14 +32,13 @@ object HighValueCustomersReport {
     }
 
     @JvmStatic
-    fun customerDataFrom(line: String): CustomerData {
-        val parts = line.split("\t").toTypedArray()
-        val spend: Double = if (parts.size == 4) 0.0 else parts[4].toDouble()
-        return CustomerData(
-            parts[0],
-            parts[1],
-            parts[2], parts[3].toInt(),
-            spend
+    fun customerDataFrom(line: String): CustomerData = line.split("\t").let { parts ->
+        CustomerData(
+            id = parts[0],
+            givenName = parts[1],
+            familyName = parts[2],
+            score = parts[3].toInt(),
+            spend = if (parts.size == 4) 0.0 else parts[4].toDouble()
         )
     }
 
