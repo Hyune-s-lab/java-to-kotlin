@@ -9,17 +9,15 @@ class MarketingAnalytics(
         val eventsForSuccessfulBookings = eventStore
             .queryAsStream("type=CompletedBooking&timerange=$timeRange")
             .flatMap { event ->
-                val interactionId = event["interactionId"] as String?
+                val interactionId = event["interactionId"] as String
                 eventStore.queryAsStream("interactionId=$interactionId")
             }
         val bookingEventsByInteractionId = eventsForSuccessfulBookings.collect(
-            groupingBy { event -> event["interactionId"] as String? }
+            groupingBy { event -> event["interactionId"] as String }
         )
-        val averageNumberOfEventsPerCompletedBooking = bookingEventsByInteractionId
-            .values
-            .stream()
-            .mapToInt { it.size }
-            .average()
-        return averageNumberOfEventsPerCompletedBooking.orElse(Double.NaN)
+        return bookingEventsByInteractionId.values.averageBy { it.size }
     }
+
+    private fun <T> Collection<T>.averageBy(selector: (T) -> Int) =
+        sumOf(selector) / size.toDouble()
 }
