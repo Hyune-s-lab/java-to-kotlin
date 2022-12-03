@@ -48,7 +48,7 @@ object HighValueCustomersReport {
     }
 
     private fun Double.toMoneyString() = this.formattedAs("%#.2f")
-    private fun Double.formattedAs(format: String) = String.format(format, this)
+    private fun Any?.formattedAs(format: String) = String.format(format, this)
 
     private val CustomerData.marketingName: String
         get() = "${familyName.uppercase(Locale.getDefault())}, $givenName"
