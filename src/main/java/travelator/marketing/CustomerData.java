@@ -3,11 +3,11 @@ package travelator.marketing;
 import java.util.Objects;
 
 public class CustomerData {
-    public final String id;
-    public final String givenName;
-    public final String familyName;
-    public final int score;
-    public final double spend;
+    private final String id;
+    private final String givenName;
+    private final String familyName;
+    private final int score;
+    private final double spend;
 
     public CustomerData(
         String id,
@@ -38,5 +38,25 @@ public class CustomerData {
     @Override
     public int hashCode() {
         return Objects.hash(id, givenName, familyName, score, spend);
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public String getGivenName() {
+        return givenName;
+    }
+
+    public String getFamilyName() {
+        return familyName;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public double getSpend() {
+        return spend;
     }
 }
