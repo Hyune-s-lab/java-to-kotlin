@@ -13,7 +13,7 @@ object HighValueCustomersReport {
     fun generate(reader: Reader?, writer: Writer) {
         val valuableCustomers = BufferedReader(reader).lines()
             .skip(1) // header
-            .map { line: String -> customerDataFrom(line) }
+            .map { line: String -> line.toCustomerData() }
             .filter { (_, _, _, score): CustomerData -> score >= 10 }
             .sorted(Comparator.comparing { (_, _, _, score): CustomerData -> score })
             .collect(Collectors.toList())
@@ -32,7 +32,7 @@ object HighValueCustomersReport {
     }
 
     @JvmStatic
-    fun customerDataFrom(line: String): CustomerData = line.split("\t").let { parts ->
+    fun String.toCustomerData() = split("\t").let { parts ->
         CustomerData(
             id = parts[0],
             givenName = parts[1],
