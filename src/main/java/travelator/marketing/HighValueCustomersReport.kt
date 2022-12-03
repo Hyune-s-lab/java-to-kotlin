@@ -25,10 +25,9 @@ object HighValueCustomersReport {
     }
 
     private fun summaryFor(valuableCustomers: List<CustomerData>): String {
-        val total = valuableCustomers.stream()
-            .mapToDouble { (_, _, _, _, spend): CustomerData -> spend }
-            .sum()
-        return "\tTOTAL\t" + total.toMoneyString()
+        return valuableCustomers.sumOf { it.spend }.let {
+            "\tTOTAL\t${it.toMoneyString()}"
+        }
     }
 
     @JvmStatic
