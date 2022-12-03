@@ -1,6 +1,6 @@
 package travelator.analytics
 
-import java.util.stream.Collectors.groupingBy
+import kotlin.streams.asSequence
 
 class MarketingAnalytics(
     private val eventStore: EventStore
@@ -8,13 +8,18 @@ class MarketingAnalytics(
     fun averageNumberOfEventsPerCompletedBooking(timeRange: String): Double {
         val eventsForSuccessfulBookings = eventStore
             .queryAsStream("type=CompletedBooking&timerange=$timeRange")
+            .asSequence()
             .flatMap { event ->
                 val interactionId = event["interactionId"] as String
-                eventStore.queryAsStream("interactionId=$interactionId")
+                eventStore
+                    .queryAsStream("interactionId=$interactionId")
+                    .asSequence()
             }
-        val bookingEventsByInteractionId = eventsForSuccessfulBookings.collect(
-            groupingBy { event -> event["interactionId"] as String }
-        )
+        val bookingEventsByInteractionId = eventsForSuccessfulBookings
+            .asSequence()
+            .groupBy { event ->
+                event["interactionId"] as String
+            }
         return bookingEventsByInteractionId.values.averageBy { it.size }
     }
 
