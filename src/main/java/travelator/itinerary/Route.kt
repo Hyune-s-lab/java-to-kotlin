@@ -5,34 +5,24 @@ import java.time.Duration
 
 typealias Route = List<Journey>
 
-fun Route(journeys: List<Journey>) = journeys
+val Route.size: Int
+    get() = this.size
 
-val Route.journeys get() = this
+operator fun Route.get(index: Int) = this[index]
 
-operator fun Route.get(index: Int): Journey { // <3>
-    return journeys[index]
-}
-
-fun Route.size(): Int { // <3>
-    return journeys.size
-}
+val Route.departsFrom: Location
+    get() = get(0).departsFrom
 
 val Route.arrivesAt: Location
-    get() = get(size() - 1).arrivesAt
+    get() = last().arrivesAt
 
 val Route.duration: Duration
     get() = Duration.between(
-        get(0).departureTime,
-        get(size() - 1).arrivalTime
+        first().departureTime,
+        last().arrivalTime
     )
-
-fun Route.withJourneyAt(index: Int, replacedBy: Journey): Route =
-    Route(journeys.withItemAt(index, replacedBy))
 
 fun <T> Iterable<T>.withItemAt(index: Int, replacedBy: T): List<T> =
     this.toMutableList().apply {
         this[index] = replacedBy
     }
-
-val Route.departsFrom: Location
-    get() = get(0).departsFrom

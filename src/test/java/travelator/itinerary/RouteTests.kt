@@ -33,7 +33,7 @@ class RouteTests {
 
         assertEquals(
             listOf(journey1, replacement, journey3),
-            route.withJourneyAt(1, replacement) // <2>
+            route.withItemAt(1, replacement) // <2>
         )
     }
 }

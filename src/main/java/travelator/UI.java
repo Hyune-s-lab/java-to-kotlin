@@ -1,10 +1,10 @@
 package travelator;
 
 import travelator.itinerary.Journey;
-import travelator.itinerary.Route;
 import travelator.itinerary.RouteKt;
 
 import java.time.Duration;
+import java.util.List;
 
 public class UI {
 
@@ -14,22 +14,20 @@ public class UI {
         }
     }
 
-
-    public void render(Route route) {
-        for (int i = 0; i < RouteKt.size(route); i++) {
-            var journey = RouteKt.get(route, i);
+    public void render(List<Journey> route) {
+        for (int i = 0; i < route.size(); i++) {
+            var journey = route.get(i);
             render(journey);
         }
     }
 
-    public void renderWithHeader(Route route) {
+    public void renderWithHeader(List<Journey> route) {
         renderHeader(
             RouteKt.getDepartsFrom(route),
             RouteKt.getArrivesAt(route),
             RouteKt.getDuration(route)
         );
-        for (int i = 0; i < RouteKt.size(route); i++) {
-            var journey = RouteKt.get(route, i);
+        for (var journey : route) {
             render(journey);
         }
     }
