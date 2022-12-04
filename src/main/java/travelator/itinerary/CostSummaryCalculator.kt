@@ -3,7 +3,6 @@ package travelator.itinerary
 import travelator.money.ExchangeRates
 import travelator.money.Money
 import java.util.*
-import java.util.Comparator.comparing
 
 class CostSummaryCalculator(
     private val userCurrency: Currency,
@@ -15,13 +14,10 @@ class CostSummaryCalculator(
     }
 
     fun summarise(): CostSummary {
-        val totals = ArrayList(currencyTotals.values)
-        totals.sortWith(comparing { m: Money -> m.currency.currencyCode })
-        val summary = CostSummary(userCurrency)
-        for (total in totals) {
-            summary.addLine(exchangeRates.convert(total, userCurrency))
-        }
-        return summary
+        val conversions = currencyTotals.values
+            .sortedBy { it.currency.currencyCode }
+            .map { exchangeRates.convert(it, userCurrency) }
+        return CostSummary(userCurrency, conversions)
     }
 
     fun reset() {
