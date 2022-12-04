@@ -1,8 +1,16 @@
 package travelator.itinerary
 
-import travelator.money.Money
+import travelator.Location
+import java.time.Duration
+import java.time.ZonedDateTime
 
 data class Journey(
-    val price: Money
-    // and other fields...
-)
+    val departsFrom: Location,
+    val arrivesAt: Location,
+    val departureTime: ZonedDateTime,
+    val arrivalTime: ZonedDateTime,
+    val method: TravelMethod
+) {
+    val duration: Duration
+        get() = Duration.between(departureTime, arrivalTime)
+}
