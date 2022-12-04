@@ -2,6 +2,7 @@ package travelator;
 
 import travelator.itinerary.Journey;
 import travelator.itinerary.Route;
+import travelator.itinerary.RouteKt;
 
 import java.time.Duration;
 
@@ -23,9 +24,9 @@ public class UI {
 
     public void renderWithHeader(Route route) {
         renderHeader(
-            route.getDepartsFrom(),
-            route.getArrivesAt(),
-            route.getDuration()
+            RouteKt.getDepartsFrom(route),
+            RouteKt.getArrivesAt(route),
+            RouteKt.getDuration(route)
         );
         for (int i = 0; i < route.size(); i++) {
             var journey = route.get(i);
