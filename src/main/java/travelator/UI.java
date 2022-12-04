@@ -16,8 +16,8 @@ public class UI {
 
 
     public void render(Route route) {
-        for (int i = 0; i < route.size(); i++) {
-            var journey = route.get(i);
+        for (int i = 0; i < RouteKt.size(route); i++) {
+            var journey = RouteKt.get(route, i);
             render(journey);
         }
     }
@@ -28,8 +28,8 @@ public class UI {
             RouteKt.getArrivesAt(route),
             RouteKt.getDuration(route)
         );
-        for (int i = 0; i < route.size(); i++) {
-            var journey = route.get(i);
+        for (int i = 0; i < RouteKt.size(route); i++) {
+            var journey = RouteKt.get(route, i);
             render(journey);
         }
     }

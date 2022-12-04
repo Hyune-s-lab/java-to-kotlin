@@ -3,16 +3,18 @@ package travelator.itinerary
 import travelator.Location
 import java.time.Duration
 
-class Route(
-    val journeys: List<Journey>
-) {
-    fun size(): Int { // <3>
-        return journeys.size
-    }
+typealias Route = List<Journey>
 
-    operator fun get(index: Int): Journey { // <3>
-        return journeys[index]
-    }
+fun Route(journeys: List<Journey>) = journeys
+
+val Route.journeys get() = this
+
+operator fun Route.get(index: Int): Journey { // <3>
+    return journeys[index]
+}
+
+fun Route.size(): Int { // <3>
+    return journeys.size
 }
 
 val Route.arrivesAt: Location
@@ -24,11 +26,13 @@ val Route.duration: Duration
         get(size() - 1).arrivalTime
     )
 
-fun Route.withJourneyAt(index: Int, replacedBy: Journey): Route {
-    val newJourneys = ArrayList(journeys)
-    newJourneys[index] = replacedBy
-    return Route(newJourneys)
-}
+fun Route.withJourneyAt(index: Int, replacedBy: Journey): Route =
+    Route(journeys.withItemAt(index, replacedBy))
+
+fun <T> Iterable<T>.withItemAt(index: Int, replacedBy: T): List<T> =
+    this.toMutableList().apply {
+        this[index] = replacedBy
+    }
 
 val Route.departsFrom: Location
     get() = get(0).departsFrom
