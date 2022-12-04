@@ -29,7 +29,7 @@ class Money private constructor(
         return Money(this.amount + that.amount, currency)
     }
 
-    companion object : (BigDecimal,Currency) -> Money {
+    companion object : (BigDecimal, Currency) -> Money {
         @JvmStatic
         fun of(amount: BigDecimal, currency: Currency) =
             this(amount, currency)
@@ -59,3 +59,8 @@ class Money private constructor(
             invoke(BigDecimal.ZERO, userCurrency)
     }
 }
+
+fun Iterable<Money>.sumOrNull() = reduceOrNull(Money::add)
+
+fun Iterable<Money>.sum(zeroCurrency: Currency): Money =
+    fold(Money.zero(zeroCurrency), Money::add)

@@ -18,7 +18,7 @@ class Itinerary_CostTest {
             )
         )
     val userCurrency = GBP
-    val calculator = CostSummaryCalculator(userCurrency, fx) // <1>
+    val calculator = PricingContext(userCurrency, fx) // <1>
 
     fun costSummary(i: Itinerary) = calculator.summarise(i.costs())
 
