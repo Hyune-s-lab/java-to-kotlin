@@ -23,6 +23,12 @@ class CostSummaryCalculator(
         return CostSummary(conversions, total)
     }
 
+    fun summarise(costs: Iterable<Money>): CostSummary {
+        val delegate = CostSummaryCalculator(userCurrency, exchangeRates)
+        costs.forEach(delegate::addCost)
+        return delegate.summarise()
+    }
+
     fun reset() {
         currencyTotals.clear()
     }
