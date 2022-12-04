@@ -19,34 +19,43 @@ class Money private constructor(
     override fun toString() =
         amount.toString() + " " + currency.currencyCode
 
-    fun add(that: Money): Money = this + that
+    fun add(that: Money) = this + that
 
     operator fun plus(that: Money): Money {
         require(currency == that.currency) {
             "cannot add Money values of different currencies"
         }
+
         return Money(this.amount + that.amount, currency)
     }
 
-    companion object {
+    companion object : (BigDecimal,Currency) -> Money {
         @JvmStatic
-        fun of(amount: BigDecimal, currency: Currency) = invoke(amount, currency)
+        fun of(amount: BigDecimal, currency: Currency) =
+            this(amount, currency)
 
-        operator fun invoke(amount: BigDecimal, currency: Currency) = Money(
-            amount.setScale(currency.defaultFractionDigits),
-            currency
-        )
+        override operator fun invoke(amount: BigDecimal, currency: Currency) =
+            Money(
+                amount.setScale(currency.defaultFractionDigits),
+                currency
+            )
 
         @JvmStatic
         fun of(amountStr: String, currency: Currency) =
-            of(BigDecimal(amountStr), currency)
+            this(amountStr, currency)
+
+        operator fun invoke(amountStr: String, currency: Currency) =
+            invoke(BigDecimal(amountStr), currency)
 
         @JvmStatic
         fun of(amount: Int, currency: Currency) =
-            of(BigDecimal(amount), currency)
+            this(amount, currency)
+
+        operator fun invoke(amount: Int, currency: Currency) =
+            invoke(BigDecimal(amount), currency)
 
         @JvmStatic
         fun zero(userCurrency: Currency) =
-            of(BigDecimal.ZERO, userCurrency)
+            invoke(BigDecimal.ZERO, userCurrency)
     }
 }

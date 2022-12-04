@@ -6,10 +6,10 @@ import java.util.*
 
 class ExchangeRatesViaBaseCurrency(
     private val baseCurrency: Currency,
-    vararg rates: Map.Entry<Currency, BigDecimal>
+    rates: Map<Currency, BigDecimal>
 ) : ExchangeRates {
 
-    private val rates = rates.map { (k, v) -> k to asRate(v) }.toMap()
+    private val rates = rates.mapValues { (_, v) -> asRate(v) }
 
     override fun rate(fromCurrency: Currency, toCurrency: Currency): BigDecimal {
         val fromRate = baseRate(fromCurrency)
