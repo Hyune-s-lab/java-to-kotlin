@@ -2,20 +2,19 @@ package travelator.recommendations
 
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
-import org.mockito.Mockito
 import travelator.Id
 import travelator.destinations.FeaturedDestination
-import travelator.domain.DistanceCalculator
 import travelator.domain.Location
 import java.util.Set
 
 class RecommendationsTests {
-    private val distanceCalculator = Mockito.mock(DistanceCalculator::class.java)
     private val featuredDestinations = mutableMapOf<Location, List<FeaturedDestination>>()
         .withDefault { emptyList() }
+    private val distanceInMetersBetween = mutableMapOf<Pair<Location, Location>, Int>()
+        .withDefault { -1 }
     private val recommendations = Recommendations(
         featuredDestinations::getValue,
-        distanceCalculator::distanceInMetersBetween
+        { l1, l2 -> distanceInMetersBetween.getValue(l1 to l2) }
     )
     private val paris = location("Paris")
     private val louvre = featured("Louvre", "Rue de Rivoli")
@@ -51,8 +50,8 @@ class RecommendationsTests {
                 louvre
             )
         )
-        givenADistanceBetween(paris, eiffelTower, 5000)
-        givenADistanceBetween(paris, louvre, 1000)
+        givenADistanceFrom(paris, eiffelTower, 5000)
+        givenADistanceFrom(paris, louvre, 1000)
         Assertions.assertEquals(
             java.util.List.of(
                 FeaturedDestinationSuggestion(paris, louvre, 1000),
@@ -71,8 +70,8 @@ class RecommendationsTests {
                 louvre
             )
         )
-        givenADistanceBetween(paris, eiffelTower, 5000)
-        givenADistanceBetween(paris, louvre, 1000)
+        givenADistanceFrom(paris, eiffelTower, 5000)
+        givenADistanceFrom(paris, louvre, 1000)
         givenFeaturedDestinationsFor(
             alton,
             java.util.List.of(
@@ -80,8 +79,8 @@ class RecommendationsTests {
                 watercressLine
             )
         )
-        givenADistanceBetween(alton, flowerFarm, 5300)
-        givenADistanceBetween(alton, watercressLine, 320)
+        givenADistanceFrom(alton, flowerFarm, 5300)
+        givenADistanceFrom(alton, watercressLine, 320)
         Assertions.assertEquals(
             java.util.List.of(
                 FeaturedDestinationSuggestion(alton, watercressLine, 320),
@@ -102,8 +101,8 @@ class RecommendationsTests {
                 watercressLine
             )
         )
-        givenADistanceBetween(alton, flowerFarm, 5300)
-        givenADistanceBetween(alton, watercressLine, 320)
+        givenADistanceFrom(alton, flowerFarm, 5300)
+        givenADistanceFrom(alton, watercressLine, 320)
         givenFeaturedDestinationsFor(
             froyle,
             java.util.List.of(
@@ -111,8 +110,8 @@ class RecommendationsTests {
                 watercressLine
             )
         )
-        givenADistanceBetween(froyle, flowerFarm, 0)
-        givenADistanceBetween(froyle, watercressLine, 6300)
+        givenADistanceFrom(froyle, flowerFarm, 0)
+        givenADistanceFrom(froyle, watercressLine, 6300)
         Assertions.assertEquals(
             java.util.List.of(
                 FeaturedDestinationSuggestion(froyle, flowerFarm, 0),
@@ -141,16 +140,11 @@ class RecommendationsTests {
         featuredDestinations[location] = destinations.toList()
     }
 
-    private fun givenADistanceBetween(
+    private fun givenADistanceFrom(
         location: Location,
         destination: FeaturedDestination,
-        result: Int
+        distanceInMeters: Int
     ) {
-        Mockito.`when`(
-            distanceCalculator.distanceInMetersBetween(
-                location,
-                destination.location
-            )
-        ).thenReturn(result)
+        distanceInMetersBetween[location to destination.location] = distanceInMeters
     }
 }
