@@ -1,12 +1,11 @@
 package travelator.recommendations
 
 import travelator.destinations.FeaturedDestination
-import travelator.domain.DistanceCalculator
 import travelator.domain.Location
 
 class Recommendations(
-    private val distanceCalculator: DistanceCalculator,
-    private val destinationFinder: (Location) -> List<FeaturedDestination>
+    private val destinationFinder: (Location) -> List<FeaturedDestination>,
+    private val distanceInMetersBetween: (Location, Location) -> Int
 ) {
     fun recommendationsFor(
         journey: Set<Location>
@@ -24,7 +23,7 @@ class Recommendations(
                 FeaturedDestinationSuggestion(
                     location,
                     featuredDestination,
-                    distanceCalculator.distanceInMetersBetween(
+                    distanceInMetersBetween( // <1>
                         location,
                         featuredDestination.location
                     )
