@@ -71,3 +71,7 @@
 ## Chapter 16
 
 - 함수형에 익숙하지 않아 함수를 매개변수로 넣는다는 개념이 어색했다.
+
+## Chapter 17
+
+- mock 보다는 prototype/stub 을 말하고 있다.
