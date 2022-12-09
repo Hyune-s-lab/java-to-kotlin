@@ -5,16 +5,16 @@ import org.junit.jupiter.api.Test
 import org.mockito.Mockito
 import travelator.Id
 import travelator.destinations.FeaturedDestination
-import travelator.destinations.FeaturedDestinations
 import travelator.domain.DistanceCalculator
 import travelator.domain.Location
 import java.util.Set
 
 class RecommendationsTests {
     private val distanceCalculator = Mockito.mock(DistanceCalculator::class.java)
-    private val featuredDestinations = Mockito.mock(FeaturedDestinations::class.java)
+    private val featuredDestinations = mutableMapOf<Location, List<FeaturedDestination>>()
+        .withDefault { emptyList() }
     private val recommendations = Recommendations(
-        featuredDestinations::findCloseTo,
+        featuredDestinations::getValue,
         distanceCalculator::distanceInMetersBetween
     )
     private val paris = location("Paris")
@@ -134,9 +134,11 @@ class RecommendationsTests {
         return FeaturedDestination(name, location)
     }
 
-    private fun givenFeaturedDestinationsFor(location: Location, result: List<FeaturedDestination>) {
-        Mockito.`when`(featuredDestinations.findCloseTo(location))
-            .thenReturn(result)
+    private fun givenFeaturedDestinationsFor(
+        location: Location,
+        destinations: List<FeaturedDestination>
+    ) {
+        featuredDestinations[location] = destinations.toList()
     }
 
     private fun givenADistanceBetween(
