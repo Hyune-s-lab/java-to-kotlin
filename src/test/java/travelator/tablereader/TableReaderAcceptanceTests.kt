@@ -25,7 +25,7 @@ class TableReaderAcceptanceTests {
         )
         assertEquals(
             expected,
-            readTable(input).map { record ->
+            readTableWithHeader(input).map { record ->
                 Measurement(
                     record["time"]?.toDoubleOrNull() ?: error("in time"),
                     record["x"]?.toDoubleOrNull() ?: error("in x"),
@@ -33,9 +33,5 @@ class TableReaderAcceptanceTests {
                 )
             }
         )
-    }
-
-    fun readTable(input: List<String>): List<Map<String, String>> {
-        TODO("Not yet implemented")
     }
 }
