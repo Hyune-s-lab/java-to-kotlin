@@ -5,7 +5,10 @@ fun readTable(lines: List<String>): List<Map<String, String>> {
 }
 
 private fun parseLine(line: String): Map<String, String> {
-    val values = line.split(",")
+    val values = line.splitFields()
     val keys = values.indices.map { it.toString() }
     return keys.zip(values).toMap()
 }
+
+private fun String.splitFields(): List<String> =
+    if (isEmpty()) emptyList() else split(",")
