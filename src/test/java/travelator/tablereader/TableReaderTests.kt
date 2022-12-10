@@ -8,7 +8,7 @@ class TableReaderTests {
     fun `empty list returns empty list`() {
         assertEquals(
             emptyList<Map<String, String>>(),
-            readTable(emptyList())
+            readTable(emptyList(), splitter = splitOnComma)
         )
     }
 
@@ -21,7 +21,8 @@ class TableReaderTests {
             readTable(
                 listOf(
                     "field0,field1"
-                )
+                ),
+                splitter = splitOnComma
             )
         )
     }
@@ -35,7 +36,8 @@ class TableReaderTests {
             readTable(
                 listOf(
                     ""
-                )
+                ),
+                splitter = splitOnComma
             )
         )
     }
@@ -51,7 +53,8 @@ class TableReaderTests {
                 listOf(
                     "row0field0,row0field1",
                     "row1field0,row1field1"
-                )
+                ),
+                splitter = splitOnComma
             )
         )
     }
@@ -83,7 +86,8 @@ class TableReaderTests {
             ),
             readTable(
                 listOf("field0,field1"),
-                headers::get
+                headers::get,
+ splitOnComma
             )
         )
     }
